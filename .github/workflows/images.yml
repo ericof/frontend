@@ -31,6 +31,8 @@ jobs:
           echo "VOLTO_VERSION=$(cat version.txt)" >> $GITHUB_OUTPUT
 
   release-builder:
+    needs:
+      - volto-version
     uses: ./.github/workflows/docker-release.yml
     with:
       volto-version: ${{ needs.volto-version.outputs.VOLTO_VERSION }}
@@ -39,10 +41,8 @@ jobs:
       registry: ghcr.io
       platforms: ${{ needs.volto-version.outputs.PLATFORMS  }}
     secrets:
-      regsitry-username: ${{ github.actor }}
-      regsitry-password: ${{ secrets.GITHUB_TOKEN }}
-    needs:
-      - volto-version
+      registry-username: ${{ github.actor }}
+      registry-password: ${{ secrets.GITHUB_TOKEN }}
 
   release-prod:
     uses: ./.github/workflows/docker-release.yml
@@ -53,8 +53,8 @@ jobs:
       registry: ghcr.io
       platforms: ${{ needs.volto-version.outputs.PLATFORMS  }}
     secrets:
-      regsitry-username: ${{ github.actor }}
-      regsitry-password: ${{ secrets.GITHUB_TOKEN }}
+      registry-username: ${{ github.actor }}
+      registry-password: ${{ secrets.GITHUB_TOKEN }}
     needs:
       - volto-version
 
@@ -67,8 +67,8 @@ jobs:
       registry: ghcr.io
       platforms: ${{ needs.volto-version.outputs.PLATFORMS  }}
     secrets:
-      regsitry-username: ${{ github.actor }}
-      regsitry-password: ${{ secrets.GITHUB_TOKEN }}
+      registry-username: ${{ github.actor }}
+      registry-password: ${{ secrets.GITHUB_TOKEN }}
     needs:
       - volto-version
       - release-builder
