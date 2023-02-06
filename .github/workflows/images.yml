@@ -37,50 +37,49 @@ jobs:
     steps:
       - name: Set BASE_IMAGE_NAME, PLATFORMS, VOLTO_VERSION
         run: |
-          echo $BASE_IMAGE_NAME
-          echo $PLATFORMS
-          echo $VOLTO_VERSION
-          echo $GITHUB_OUTPUT
+          echo ${{ needs.volto-version.outputs.BASE_IMAGE_NAME }}
+          echo ${{ needs.volto-version.outputs.PLATFORMS }}
+          echo ${{ needs.volto-version.outputs.VOLTO_VERSION }}
 
-  release-builder:
-    needs:
-      - volto-version
-    uses: ./.github/workflows/docker-release.yml
-    with:
-      volto-version: ${{ needs.volto-version.outputs.VOLTO_VERSION }}
-      base-image-name: ${{ needs.volto-version.outputs.BASE_IMAGE_NAME }}
-      suffix: builder
-      registry: ghcr.io
-      platforms: ${{ needs.volto-version.outputs.PLATFORMS  }}
-    secrets:
-      registry-username: ${{ github.actor }}
-      registry-password: ${{ secrets.GITHUB_TOKEN }}
+  # release-builder:
+  #   needs:
+  #     - volto-version
+  #   uses: ./.github/workflows/docker-release.yml
+  #   with:
+  #     volto-version: ${{ needs.volto-version.outputs.VOLTO_VERSION }}
+  #     base-image-name: ${{ needs.volto-version.outputs.BASE_IMAGE_NAME }}
+  #     suffix: builder
+  #     registry: ghcr.io
+  #     platforms: ${{ needs.volto-version.outputs.PLATFORMS  }}
+  #   secrets:
+  #     registry-username: ${{ github.actor }}
+  #     registry-password: ${{ secrets.GITHUB_TOKEN }}
 
-  release-prod:
-    uses: ./.github/workflows/docker-release.yml
-    with:
-      volto-version: ${{ needs.volto-version.outputs.VOLTO_VERSION }}
-      base-image-name: ${{ needs.volto-version.outputs.BASE_IMAGE_NAME }}
-      suffix: prod
-      registry: ghcr.io
-      platforms: ${{ needs.volto-version.outputs.PLATFORMS  }}
-    secrets:
-      registry-username: ${{ github.actor }}
-      registry-password: ${{ secrets.GITHUB_TOKEN }}
-    needs:
-      - volto-version
+  # release-prod:
+  #   uses: ./.github/workflows/docker-release.yml
+  #   with:
+  #     volto-version: ${{ needs.volto-version.outputs.VOLTO_VERSION }}
+  #     base-image-name: ${{ needs.volto-version.outputs.BASE_IMAGE_NAME }}
+  #     suffix: prod
+  #     registry: ghcr.io
+  #     platforms: ${{ needs.volto-version.outputs.PLATFORMS  }}
+  #   secrets:
+  #     registry-username: ${{ github.actor }}
+  #     registry-password: ${{ secrets.GITHUB_TOKEN }}
+  #   needs:
+  #     - volto-version
 
-  release-dev:
-    uses: ./.github/workflows/docker-release.yml
-    with:
-      volto-version: ${{ needs.volto-version.outputs.VOLTO_VERSION }}
-      base-image-name: ${{ needs.volto-version.outputs.BASE_IMAGE_NAME }}
-      suffix: dev
-      registry: ghcr.io
-      platforms: ${{ needs.volto-version.outputs.PLATFORMS  }}
-    secrets:
-      registry-username: ${{ github.actor }}
-      registry-password: ${{ secrets.GITHUB_TOKEN }}
-    needs:
-      - volto-version
-      - release-builder
+  # release-dev:
+  #   uses: ./.github/workflows/docker-release.yml
+  #   with:
+  #     volto-version: ${{ needs.volto-version.outputs.VOLTO_VERSION }}
+  #     base-image-name: ${{ needs.volto-version.outputs.BASE_IMAGE_NAME }}
+  #     suffix: dev
+  #     registry: ghcr.io
+  #     platforms: ${{ needs.volto-version.outputs.PLATFORMS  }}
+  #   secrets:
+  #     registry-username: ${{ github.actor }}
+  #     registry-password: ${{ secrets.GITHUB_TOKEN }}
+  #   needs:
+  #     - volto-version
+  #     - release-builder
